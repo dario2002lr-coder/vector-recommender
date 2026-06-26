@@ -1,6 +1,10 @@
+"""Movie domain model"""
 from pydantic import BaseModel
 
+
 class Movie(BaseModel):
+    """Domain model representing a movie with its metadata"""
+    
     id: int
     title: str
     overview: str | None = None
