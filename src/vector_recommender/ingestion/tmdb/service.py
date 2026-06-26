@@ -1,5 +1,9 @@
 """Service layer for TMDB movie data ingestion"""
 from .mapper import tmdb_to_movie
+from vector_recommender.logger import get_logger
+
+
+logger = get_logger(__name__)
 
 
 class TMDBService:
@@ -12,6 +16,7 @@ class TMDBService:
             client: TMDBClient instance
         """
         self.client = client
+        logger.info("TMDBService initialized")
 
     def get_movie(self, movie_id: int):
         """Retrieve and map a single movie by ID.
@@ -22,8 +27,11 @@ class TMDBService:
         Returns:
             Movie: Domain model with movie details
         """
+        logger.debug("Fetching movie with id=%s", movie_id)
         data = self.client.get_movie(movie_id)
-        return tmdb_to_movie(data)
+        movie = tmdb_to_movie(data)
+        logger.info("Fetched movie %s", movie.title)
+        return movie
 
     def search_movie(self, query: str):
         """Search for movies and return raw results.
@@ -34,5 +42,8 @@ class TMDBService:
         Returns:
             list: Search results
         """
+        logger.debug("Searching TMDB for query=%s", query)
         data = self.client.search_movie(query)
-        return data["results"]
+        results = data["results"]
+        logger.info("Search returned %s results for query=%s", len(results), query)
+        return results

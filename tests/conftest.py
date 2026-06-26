@@ -2,9 +2,16 @@
 import os
 import pytest
 from dotenv import load_dotenv
+from vector_recommender.logger import get_logger
 
 # Load environment variables for tests
 load_dotenv(".env")
+
+
+@pytest.fixture(scope="session")
+def logger():
+    """Fixture to provide a shared logger for tests."""
+    return get_logger("tests")
 
 
 @pytest.fixture

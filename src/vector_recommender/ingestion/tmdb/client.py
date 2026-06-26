@@ -1,6 +1,11 @@
 """TMDB API client for movie data retrieval"""
 import requests
 
+from vector_recommender.logger import get_logger
+
+
+logger = get_logger(__name__)
+
 
 class TMDBClient:
     """Client for interacting with The Movie Database (TMDB) API v3"""
@@ -14,6 +19,7 @@ class TMDBClient:
             access_token: TMDB API v4 access token (Bearer token format)
         """
         self.access_token = access_token
+        logger.info("TMDBClient initialized")
 
     def _get(self, endpoint: str, params: dict | None = None) -> dict:
         """Make a GET request to the TMDB API.
@@ -34,9 +40,17 @@ class TMDBClient:
         headers = {"Authorization": f"Bearer {self.access_token}"}
 
         url = f"{self.BASE_URL}{endpoint}"
+        logger.debug("Sending request to TMDB: %s %s", url, params)
+
         response = requests.get(url, params=params, headers=headers)
 
-        response.raise_for_status()
+        try:
+            response.raise_for_status()
+        except requests.HTTPError as error:
+            logger.error("TMDB request failed: %s %s", response.status_code, response.text)
+            raise
+
+        logger.info("TMDB request succeeded: %s", endpoint)
         return response.json()
 
     def get_movie(self, movie_id: int) -> dict:
