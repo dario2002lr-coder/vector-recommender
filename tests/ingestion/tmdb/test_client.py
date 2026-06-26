@@ -1,21 +1,21 @@
-"""Test para validar la conexión y funcionamiento del cliente de TMDB"""
+"""Tests to validate TMDB API client connection and functionality"""
 import pytest
 from vector_recommender.ingestion.tmdb.client import TMDBClient
 
 
 class TestTMDBClient:
-    """Tests del cliente TMDB"""
+    """TMDB client tests"""
 
     def test_client_initialization(self, tmdb_access_token):
-        """Verifica que el cliente se inicialice correctamente"""
+        """Verify that the client initializes correctly"""
         client = TMDBClient(access_token=tmdb_access_token)
         assert client.access_token == tmdb_access_token
 
     def test_search_movie(self, tmdb_access_token):
-        """Prueba búsqueda de película - Verifica conectividad con API"""
+        """Test movie search - Verify API connectivity"""
         client = TMDBClient(access_token=tmdb_access_token)
         
-        # Buscamos una película muy conocida
+        # Search for a well-known movie
         result = client.search_movie("The Matrix")
         
         assert "results" in result
@@ -23,7 +23,7 @@ class TestTMDBClient:
         assert any("Matrix" in movie.get("title", "") for movie in result["results"])
 
     def test_get_movie(self, tmdb_access_token):
-        """Prueba obtener detalles de una película específica"""
+        """Test getting details of a specific movie"""
         client = TMDBClient(access_token=tmdb_access_token)
         
         # The Matrix - ID: 603
