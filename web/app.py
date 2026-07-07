@@ -64,12 +64,36 @@ if submit or st.session_state.get("movie_prompt") and st.session_state.get("movi
                 with col:
                     st.markdown(f"### {movie['title']}")
                     st.write(movie.get("overview") or "No overview available.")
-                    genres = movie.get("genres") or []
-                    if isinstance(genres, str):
-                        genre_text = genres
-                    else:
-                        genre_text = ", ".join(str(genre) for genre in genres)
-                    st.caption(f"Genres: {genre_text or 'Unknown'}")
+                    raw_genres = movie.get("genres") or []
+                    genre_names = []
+                    if isinstance(raw_genres, str):
+                        try:
+                            import ast
+
+                            parsed_genres = ast.literal_eval(raw_genres)
+                            if isinstance(parsed_genres, list):
+                                for genre in parsed_genres:
+                                    if isinstance(genre, dict):
+                                        name = genre.get("name") or genre.get("genre")
+                                        if name:
+                                            genre_names.append(str(name))
+                            elif isinstance(parsed_genres, dict):
+                                name = parsed_genres.get("name") or parsed_genres.get("genre")
+                                if name:
+                                    genre_names.append(str(name))
+                        except Exception:
+                            genre_names = []
+                    elif isinstance(raw_genres, list):
+                        for genre in raw_genres:
+                            if isinstance(genre, dict):
+                                name = genre.get("name") or genre.get("genre")
+                                if name:
+                                    genre_names.append(str(name))
+                            elif genre is not None:
+                                genre_names.append(str(genre))
+
+                    genre_text = ", ".join(genre_names) if genre_names else "Unknown"
+                    st.caption(f"Genres: {genre_text}")
                     release_date = movie.get("release_date") or "Unknown"
                     vote_average = movie.get("vote_average")
                     vote_text = f"⭐ {vote_average:.1f}" if vote_average is not None else "⭐ N/A"
