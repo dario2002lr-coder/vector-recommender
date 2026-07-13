@@ -11,37 +11,11 @@ from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 
 from vector_recommender.logger import get_logger
+from vector_recommender.ml.text_processing import build_semantic_document
 
 from config import settings
 
 logger = get_logger(__name__)
-
-
-def build_semantic_document(row: pd.Series) -> str:
-    """Create a semantic textual document for a movie row."""
-    title = _clean_text(row.get("title"))
-    genres = _clean_text(row.get("genres"))
-    overview = _clean_text(row.get("overview"))
-    keywords = _clean_text(row.get("keywords"))
-    tagline = _clean_text(row.get("tagline"))
-
-    parts = [part for part in [title, genres, overview, keywords, tagline] if part]
-    return ". ".join(parts)
-
-
-def _clean_text(value: Any) -> str:
-    if pd.isna(value):
-        return ""
-
-    if isinstance(value, list):
-        return ", ".join(str(item) for item in value)
-
-    if isinstance(value, str):
-        text = value.strip()
-        return text if text else ""
-
-    return str(value)
-
 
 class SemanticMovieRecommender:
     """Recommend movies by semantic similarity using precomputed embeddings."""

@@ -3,10 +3,8 @@ import pandas as pd
 import vector_recommender.ml.semantic_recommender as semantic_recommender
 from config import settings as config_settings
 
-from vector_recommender.ml.semantic_recommender import (
-    SemanticMovieRecommender,
-    build_semantic_document,
-)
+from vector_recommender.ml.semantic_recommender import SemanticMovieRecommender
+from vector_recommender.ml.text_processing import build_semantic_document
 
 
 class DummyEncoder:
