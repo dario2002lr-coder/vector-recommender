@@ -1,0 +1,12 @@
+from pathlib import Path
+
+PROJECT_ROOT = Path(__file__).parent.parent
+
+DATA_DIR = PROJECT_ROOT/"data"
+RAW_DATA_DIR = DATA_DIR/"raw"
+PROCESSED_DATA_DIR = DATA_DIR/"processed"
+
+TMDB_5000_DATASET_DIR = RAW_DATA_DIR/"tmdb_5000_movie_dataset"
+
+TMDB_5000_CREDITS_PATH = TMDB_5000_DATASET_DIR/"tmdb_5000_credits.csv"
+TMDB_5000_MOVIES_PATH = TMDB_5000_DATASET_DIR/"tmdb_5000_movies.csv"
