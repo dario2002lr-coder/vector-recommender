@@ -59,3 +59,24 @@ def build_semantic_document(
         )
 
     return "\n\n".join(parts)
+
+def build_semantic_documents(
+    df: pd.DataFrame,
+) -> pd.DataFrame:
+    """Generate semantic documents for all movies."""
+
+    logger.info("Generating semantic documents.")
+
+    df = df.copy()
+
+    df["semantic_document"] = df.apply(
+        build_semantic_document,
+        axis=1,
+    )
+
+    logger.info(
+        "Generated semantic documents for %d movies.",
+        len(df),
+    )
+
+    return df
