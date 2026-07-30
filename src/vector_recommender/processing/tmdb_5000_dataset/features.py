@@ -47,6 +47,8 @@ def create_profit_feature(
     logger.info("Created feature: 'profit'.")
     logger.debug(df[["revenue", "budget", "profit"]].head())
 
+    return df
+
 def compute_weighted_rating(
     df: pd.DataFrame,
 ) -> pd.DataFrame:
@@ -92,3 +94,24 @@ def compute_weighted_rating(
         WEIGHTED_RATING_VOTE_COUNT_PERCENTILE,
         m,
     )
+
+    qualified = df[df["vote_count"] >= m].copy()
+
+    v = qualified["vote_count"]
+    r = qualified["vote_average"]
+
+    qualified["weighted_rating"] = (
+        (v / (v + m)) * r
+        + (m / (v + m)) * c
+    )
+
+    df = df.merge(
+        qualified[["weighted_rating"]],
+        left_index=True,
+        right_index=True,
+        how="left",
+    )
+
+    logger.info("Feature 'weighted_rating' created successfully.")
+
+    return df
