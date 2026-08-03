@@ -1,39 +1,48 @@
 """Utilities for generating sentence embeddings."""
 
 import numpy as np
-import pandas as pd
 from sentence_transformers import SentenceTransformer
 
-from config.config import EMBEDDING_MODEL_NAME
 from vector_recommender.logger import get_logger
 
 logger = get_logger(__name__)
 
 
 def generate_embeddings(
-    df: pd.DataFrame,
+    texts: list[str],
+    model: SentenceTransformer,
+    *,
+    show_progress_bar: bool = False,
 ) -> np.ndarray:
-    """Generate embeddings from semantic documents."""
+    """Generate normalized embeddings from a list of texts.
 
-    if "semantic_document" not in df.columns:
-        logger.error("Column 'semantic_document' not found.")
-        raise ValueError("Column 'semantic_document' not found.")
+    Parameters
+    ----------
+    texts : list[str]
+        List of input texts.
+    model : SentenceTransformer
+        Loaded SentenceTransformer model.
+    show_progress_bar : bool, default=False
+        Whether to display the encoding progress bar.
+
+    Returns
+    -------
+    np.ndarray
+        Array containing one embedding per input text.
+    """
+    if not texts:
+        logger.error("No texts were provided.")
+        raise ValueError("No texts were provided.")
 
     logger.info(
-        "Loading embedding model '%s'.",
-        EMBEDDING_MODEL_NAME,
+        "Generating embeddings for %d texts.",
+        len(texts),
     )
-
-    model = SentenceTransformer(
-        EMBEDDING_MODEL_NAME,
-    )
-
-    logger.info("Generating embeddings.")
 
     embeddings = model.encode(
-        df["semantic_document"].tolist(),
+        texts,
         normalize_embeddings=True,
-        show_progress_bar=True,
+        show_progress_bar=show_progress_bar,
     )
 
     logger.info(
