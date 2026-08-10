@@ -1,9 +1,13 @@
 import streamlit as st
 
-from app.utils.cache import (
+from utils.cache import (
     load_embeddings,
     load_model,
     load_movies,
+)
+
+from config.config import (
+    TOP_K_RECOMMENDATIONS,
 )
 
 from vector_recommender.recommendation.recommenders import (
@@ -36,6 +40,7 @@ def render_home():
             movies_df=movies,
             embeddings=embeddings,
             model=model,
+            top_k=TOP_K_RECOMMENDATIONS,
         )
 
         st.dataframe(

@@ -21,3 +21,6 @@ WEIGHTED_RATING_VOTE_COUNT_PERCENTILE = 0.10
 
 #-------------------------------- EMBEDDING MODEL --------------------------------- #
 EMBEDDING_MODEL_NAME = "BAAI/bge-small-en-v1.5"
+
+#------ NUMBER OF RECOMMENDATIONS TO RETURN ------ #
+TOP_K_RECOMMENDATIONS = 5
