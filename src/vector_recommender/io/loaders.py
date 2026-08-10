@@ -3,12 +3,13 @@
 from pathlib import Path
 
 import pandas as pd
+import numpy as np
 
 from vector_recommender.logger import get_logger
 
 logger = get_logger(__name__)
 
-def _load_csv(path: Path) -> pd.DataFrame:
+def load_csv(path: Path) -> pd.DataFrame:
     """Load a CSV file into a pandas DataFrame.
 
     Parameters
@@ -42,3 +43,22 @@ def _load_csv(path: Path) -> pd.DataFrame:
     )
 
     return df
+
+
+def load_numpy_array(path: Path) -> np.ndarray:
+    """Load a NumPy array from a .npy file."""
+    if not path.exists():
+        logger.error("File not found: %s", path)
+        raise FileNotFoundError(f"File not found: {path}")
+
+    logger.info("Loading NumPy array: %s", path.name)
+
+    array = np.load(path)
+
+    logger.info(
+        "Loaded %s with shape %s.",
+        path.name,
+        array.shape,
+    )
+
+    return array
