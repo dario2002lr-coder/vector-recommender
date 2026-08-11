@@ -14,6 +14,8 @@ from vector_recommender.recommendation.recommenders import (
     recommend_movies,
 )
 
+from components.movie_card import render_movie_card
+
 st.title("🎥 Movie Recommender")
 
 st.write(
@@ -45,7 +47,5 @@ if st.button("Recommend", type="primary"):
 
         st.subheader("Recommendations")
 
-        st.dataframe(
-            results,
-            use_container_width=True,
-        )
+        for _, movie in results.iterrows():
+            render_movie_card(movie)

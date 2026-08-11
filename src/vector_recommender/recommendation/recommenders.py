@@ -71,6 +71,7 @@ def recommend_movies(
             "title",
             "release_year",
             "genres",
+            "overview",
             "vote_average",
             "weighted_rating",
         ]
